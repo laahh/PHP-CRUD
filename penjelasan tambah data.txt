@@ -1,0 +1,98 @@
+//insert / tambah data 
+
+tambah.php  berisi form untuk menambahkan inputan form dari user ke database 
+form action di kosongkan karena data tidak dilempar kemana mana tetapi dikirimkan ke database
+dan methodnya adalah post,kenapa post karena kalau menggunakan get url akan terlalu panjang
+
+Methode POST untuk pengiriman datanya secara langsung sedangkan methode GET secara tidak langsung yang artinya saat kita menginput data seperti nama, alamat, dll maka data tersebut akan tampil di URL. 
+
+di form input kita tambahkan name="" digunakan untuk mengidentifikasi inputan dari user
+
+
+kemudian setelah itu membuat logic untuk memasukan data ke database
+pertama koneksikan database menggunakan fungsi mysqli_connect() dan simpan ke variabel $conn
+
+untuk mengecek database error atau benar
+if (mysqli_connect_errno()) {
+ echo "Koneksi database gagal : " . mysqli_connect_error();
+ }
+
+
+logic untuk insert data ke DB
+
+//alur kerja insert data ke database
+//1. buat pengkondisian untuk mengecek apakah tombol submit sudah di klik atau belum
+if(issets($POST["submit"])){
+    //2. ambil data dari tiap elemen dalam form =>ini berada di function.php agar tidak terlalu panjang
+
+    jadi di function.php kita buat fungsi untuk mengambil data dari tiap elemen dalam form
+    kemudian di simpan di variabel
+
+    function tambah ($data){
+    //ambil data dari tiap elemen dalam form
+    $nim=$data["nim"]; 
+    $nama=$data["nama"];
+    $email==$data["email"];
+    $jurusan==$data["jurusan"];
+    $gambar==$data["gambar"];
+
+
+    diatas itu adalah function tambah yang berisi parameter $data yang berisi data dari tiap elemen dalam form yang diambil dari $_POST
+
+    //3. query insert data
+    $query="INSERT INTO mahasiswa VALUES ('','$nim','$nama','$email','$jurusan','$gambar')";
+    //4. jalankan query
+    mysqli_query($conn,$query);
+    //5. cek apakah data berhasil ditambahkan atau tidak
+    //mysqli_affected_rows() =>mengembalikan berapa baris yang terpengaruh oleh query yang dijalankan
+    //jika hasilnya 1 maka data berhasil ditambahkan
+    if(mysqli_affected_rows($conn)>0){
+        echo "data berhasil ditambahkan";
+    }else{
+        echo "data gagal ditambahkan";
+    }
+
+
+    }
+
+}
+
+
+
+
+if(isset($_POST["sumbit"])){
+    if(tambah($_POST)>0){
+        echo "data berhasil ditambahkan";
+    }else {
+        echo "data gagal ditambahkan";
+    }
+
+}
+
+
+
+
+
+
+
+
+    function tambah ($data){
+    //ambil data dari tiap elemen dalam form
+    $nim=$data["nim"]; 
+    $nama=$data["nama"];
+    $email==$data["email"];
+    $jurusan==$data["jurusan"];
+    $gambar==$data["gambar"];
+
+
+    diatas itu adalah function tambah yang berisi parameter $data yang berisi data dari tiap elemen dalam form yang diambil dari $_POST
+
+    //3. query insert data
+    $query="INSERT INTO mahasiswa VALUES ('','$nim','$nama','$email','$jurusan','$gambar')";
+    //4. jalankan query
+    mysqli_query($conn,$query);
+    //5. cek apakah data berhasil ditambahkan atau tidak
+    //mysqli_affected_rows() =>mengembalikan berapa baris yang terpengaruh oleh query yang dijalankan
+pengecekan diatas dilakukan di tambah.php
+
+lalu dibagian function.php kita buat function tambah yang berisi parameter $data yang berisi data dari tiap elemen dalam form yang diambil dari $_POST seperti yang dijelaskan diatas

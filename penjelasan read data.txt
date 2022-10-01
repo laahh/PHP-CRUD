@@ -1,0 +1,62 @@
+//penjelasan read data atau menampilkan data yang ada di DB ke dalam tabel
+
+=>langkah pertama adalah koneksikan dulu database ke dalam aplikasi/program kita dengan  cara 
+menggunakan function bawaan dari php yaitu mysql_connect().
+mysql_connect() membutuhkan 4 parameter yaitu :
+1. nama host
+2. username
+3. password
+4. nama database
+
+contoh nya seperti dibawah ini 
+$conn=mysqli_connect("localhost","root","","db_mahasiswa");
+$conn digunakan untuk menampung koneksikan database ke dalam aplikasi/program kita
+
+=>setelah itu kita cek apakah database kita sudah terkoneksi dengan benar atau belum 
+dengan menggunakan function mysqli_connect_errno() yang akan mengembalikan nilai 0 jika db salah
+koneksikan database ke dalam aplikasi/program kita berhasil dan mengembalikan nilai 1 jika
+
+
+=>selanjutnya setelah berhasil terkoneksi dengan DB
+kita buat query untuk menampilkan data yang ada di DB ke dalam tabel
+menggunakan function bawaan dari php yaitu mysqli_query()
+mysqli_query membutuhkan 2 parameter yaitu :
+1. $conn => DBnya
+2. query ==> isinya dalah query mysql untuk menampilkan data dari db (SELECT * FROM mahasiswa)
+
+contoh nya seperti dibawah ini:
+$query=mysqli_query($conn,"SELECT * FROM mahasiswa"); =>query ini ditaruh di index.php
+$mahasiswa = query("SELECT * FROM mahasiswa"); ini di index.php
+
+$result=mysqli_query($conn,$query) => kenapa ditulis seperti ini karena untuk memudahkan,tidak terlalu panjang jadi perintah query mysql di tampung di variavel $query
+
+=>setelah itu kita buat variabel array kosong dengan nama bebas, saya contohkan $rows 
+$rows=[]; ini digunakan untuk menampung data yang di ambil dari DB 
+jadi kita perlu array kosong untuk menampung data nantinya
+
+=>selanjutnya kita buat perulangan untuk menampilkan data yang ada di DB ke dalam tabel
+menggunakan function bawaan dari php yaitu mysqli_fetch_assoc()
+mysqli_fetch_assoc adalah function untuk mengambil data dari DB dan mengembalikan nilai array
+mysqli_fetch_assoc membutuhkan 1 parameter yaitu :
+1. $result => hasil dari query mysql
+
+contoh nya seperti dibawah ini:
+while($row=mysqli_fetch_assoc($result)){ //artinya row itu adalah array yang berisi data dariDB
+    $rows[]=$row; => ini untuk menampung data yang di ambil dari DB ke dalam variabel $rows
+}
+
+kemudian return rows[]; untuk mengembalikan nilai dari variabel $rows
+
+contoh lengkapnya seperti dibawah ini
+<?php
+$conn=mysql_connect("localhost","root","","db_mahasiswa");
+
+function query($query){
+    global $conn;
+    $result=mysqli_query($conn,$query);
+    $rows = [];
+    while($row=mysqli_fetch_assoc($result)){
+        rows[]=row;
+    }
+    return $rows;
+}

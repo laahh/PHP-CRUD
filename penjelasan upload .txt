@@ -1,0 +1,115 @@
+upload gambar di form tambah.php
+pertama kita akan ubah name di tambah.php dan edit.php dirubah menjadi type file
+apa itu type file ??
+type file adalah sebuah inputan yang berfungsi untuk mengupload file
+dibagian form kita tambahkan enctype dengan nilai multipart/form-data
+kegunaanya adalah untuk mengirimkan data file (khusus untuk form yang mengandung input type file)
+contoh 
+<form action="tambah.php" method="post" enctype="multipart/form-data">
+
+
+jika di var_dump($_FILES);
+maka akan muncul array seperti ini
+Array ( [gambar] => Array ( [name] => 1.jpg [type] => image/jpeg [tmp_name] => C:\xampp\tmp\phpB1D8.tmp [error] => 0 [size] => 10000 ) )
+
+
+
+lalu setelah itu kita ke function tambah di file function.php
+dibagian function tambah
+kita tambahkan
+$gambar = upload(); inin artinya kita akan memanggil function upload yang ada di file function.php dan akan mengembalikan nilai gambar
+if(!$gambar){ //jika gambar tidak ada 
+return false; //maka akan mengembalikan nilai false dan tidak akan mengeksekusi query atau menghentikan eksekusi
+}
+
+dan jika gambar ada maka akan mengeksekusi query
+$query = "INSERT INTO mahasiswa VALUES ('','$nama','$nrp','$email','$jurusan','$gambar')";
+
+
+
+selanjutnya kita membuat function upload di file function.php
+function upload(){
+$namaFile = $_FILES['gambar']['name']; //mengambil nama file dari inputan gambar yang ada di tambah.php dan edit.php
+$ukuranFile = $_FILES['gambar']['size']; //mengambil ukuran file dari inputan gambar yang ada di tambah.php dan edit.php
+$error = $_FILES['gambar']['error']; //mengambil error dari inputan gambar yang ada di tambah.php dan edit.php
+$tmpName = $_FILES['gambar']['tmp_name']; //mengambil tmp_name dari inputan gambar yang ada di tambah.php dan edit.php
+
+selanjutnya kita membuat validasi file yang diupload
+if ($error === 4) { //4 adalah kode error yang terjadi jika tidak ada gambar yang diupload
+        echo "<script>
+        alert('pilih gambar terlebih dahulu');
+        </script>";
+        return false; //return false digunakan untuk menghentikan function upload() 
+    }
+
+artinya function dari upload akan berhenti jika tidak ada gambar yang diupload
+atau mengembalikan nilai false jika tidak ada gambar yang diupload
+
+
+selanjutnya kita membuat validasi file yang diupload apakah file yang diupload adalah gambar atau bukan
+/membuat array untuk menampung ekstensi gambar yang valid contoh jpg, jpeg, png
+$ekstensiGambarValid = ['jpg','jpeg','png'];
+
+$ekstensiGambar = explode('.', $namaFile); //explode digunakan untuk memecah string menjadi array
+fungsi ini digunakan untuk memecah nama file dan ekstensi file menjadi 2 bagian  contoh 1.jpg menjadi 1 dan jpg
+
+$ekstensiGambar = strtolower(end($ekstensiGambar)); //strtolower digunakan untuk mengubah string menjadi huruf kecil jika ada user yang menginputkan ekstensi file dengan huruf besar
+end digunakan untuk mengambil elemen terakhir dari array contoh ['aprils','jpeg'] maka yang diambil adalah jpg
+
+lalu buat pengecekan apakah ada array ekstensiGambar di dalam array ekstensiGambarValid
+if(!in_array($ekstensiGambar, $ekstensiGambarValid)){ //in_array digunakan untuk mengecek apakah ada array di dalam array
+        echo "<script>
+        alert('yang anda upload bukan gambar');
+        </script>";
+        return false; //return false digunakan untuk menghentikan function upload() 
+    }
+
+
+code diatas adalah untuk mengecek apakah file yang diupload memiliki ekstensi yang sama dengan array ekstensiGambarValid
+jika tidak maka akan mengembalikan nilai false dan menghentikan function upload()
+
+
+langkah selanjutnya adalah mengecek apakah ukuran file yang diupload lebih dari 1mb atau tidak
+if($ukuranFile > 1000000){ //1000000 adalah ukuran 1mb
+        echo "<script>
+        alert('ukuran gambar terlalu besar');
+        </script>";
+        return false; //return false digunakan untuk menghentikan function upload() 
+    }
+
+jika ukuran file lebih dari 1mb maka akan mengembalikan nilai false dan menghentikan function upload()
+
+seanjutnya setelah lolos pengecekan diatas maka kita akan membuat nama file baru agar tidak ada nama file yang sama
+membuat file menjadi unique agar tidak ada nama file yang sama
+$namaFileBaru = uniqid(); //uniqid digunakan untuk membuat nama file menjadi unique
+$namaFileBaru .= '.'; //menambahkan titik pada nama file agar nama file dan ekstensi file terpisah
+$namaFileBaru .= $ekstensiGambar; //menambahkan ekstensi file pada nama file yang sudah diubah menjadi unique agar menjadi nama file baru yang unik
+
+lalu kita akan memindahkan file yang diupload ke folder img
+move_uploaded_file($tmpName, 'img/' . $namaFileBaru); //move_uploaded_file digunakan untuk memindahkan file yang diupload ke folder img
+$tmpName adalah lokasi sementara file yang diupload dan 'img/' . $namaFileBaru adalah lokasi tujuan file yang diupload
+
+return $namaFileBaru; //mengembalikan nilai nama file baru yang sudah diubah menjadi unique agar tidak ada nama file yang sama
+}
+
+
+
+jadi return akan dikembalikan ke function edit 
+function tambah($data)
+{
+    global $conn;
+    $nim = htmlspecialchars($data["nim"]);
+    $nama = htmlspecialchars($data["nama"]);
+    $jurusan = htmlspecialchars($data["jurusan"]);
+    $email = htmlspecialchars($data["email"]);
+    $gambar = upload(); ==> ini artinya variable gambar di isi dengan nilai yang dikembalikan oleh function upload() nilai kembali dari fungsi upload adalah nama file dari gambar
+    if (!$gambar) { 
+        return false;
+    }
+
+
+
+selanjutnya di bagian edit.php kita akan mengubah gambar yang sudah ada
+dibagian form edit.php kita akan menambahkan enctype="multipart/form-data" pada form
+dan dibagian input gambar kita akan menambahkan value="<?= $mhs["gambar"]; ?>" agar gambar yang sudah ada tidak hilang ketika kita mengedit data
+dan kita akan menambahkan inputan hidden untuk menampung nama file gambar yang sudah ada

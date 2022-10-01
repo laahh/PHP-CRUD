@@ -1,0 +1,65 @@
+langkah langkah untuk membuat register 
+langkah pertama membuat form untuk inputan registrasi oleh users 
+langkah kedua membuat database untuk menyimpan data registrasi
+langkah selanjutnya membuat logika untuk mengecek apakah tombol sign up/tombol registrasi dipencet atau belum 
+jika sudah dipencet maka akan mengecek apakah return dari fungsi register yang ada di file function.php bernilai true atau false
+jika true maka data akan disimpan ke database dan notif berhasil dimasukan 
+jika false maka akan menampilkan mysqli error
+mysqli error adalah error yang dihasilkan oleh mysqli ketika terjadi kesalahan pada query sql
+
+langkah selanjutnya membuat funtion registrasi
+buat function registrasi dengan parameter data
+==>parameter data di ambil dari $_POST yang di inputkan oleh users
+==>parameter data berisi username, password, password2
+==>parameter data di masukan ke dalam variabel $username, $password, $password2
+
+
+function register($data){
+    global $conn;
+    $username = $data["username"];
+    $password = $data["password"];
+    $password2 = $data["password2"];
+
+}
+
+==>mengecek apakah username sudah ada atau belum
+==>pertama kita buat variabel $cekUsers untuk mengambil username dari database
+==>kemudian kita isi $cekUsers = query untuk mengambil username dari database
+==>$cekUsers = mysqli_query($conn, "SELECT username FROM users WHERE username = '$username'");
+
+kemudian kita buat kondisi untuk mengecek apakah username sudah ada atau belum 
+dengan menggunakan (mysqli_fetch_row($cekUsers)) ==>ini kanartinya kita mengambil data dari database dan kita masukan ke dalam variabel $cekUsers
+jika $cekUsers tidak sama dengan false maka username sudah ada
+
+
+if(mysqli_fetch_row($cekUsers)){
+        echo "<script>
+                alert('username sudah terdaftar');
+            </script>";
+        return false;
+    }
+
+
+==>lalu di cek apakah password yang di inputkan user sama dengan password2 yang di inputkan user
+==>jika tidak sama maka akan menampilkan notif password tidak sesuai
+if($password !== $password2){
+        echo "<script>
+                alert('konfirmasi password tidak sesuai');
+            </script>";
+        return false;
+    }
+
+
+
+==>kemudian buat variabel $password = password_hash($password, PASSWORD_DEFAULT);
+ini digunakan untuk mengenkripsi password yang di inputkan user
+
+selanjutnya kita buat query untuk memasukan data ke database
+mysqli_query($conn,"INSERT INTO users VALUES('','$username','$password')");
+==>ini adalah query untuk memasukan data ke database
+
+return mysqli_affected_rows($conn); ==>ini digunakan untuk mengecek apakah data berhasil dimasukan ke database atau tidak
+
+
+}
+

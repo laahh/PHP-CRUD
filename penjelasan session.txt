@@ -1,0 +1,17 @@
+//session adalah sebuah variabel yang menyimpan data sementara yang dapat diakses oleh beberapa halaman
+
+//session_start(); //memulai session ini harus diletakkan diawal
+
+// $_SESSION["login"] = true; //membuat session login
+artinya kita membuat session bernama login yang nilainya true (benar) dan kita bisa mengaksesnya di halaman lain dengan cara $_SESSION["login"]
+jika kita paksa mengakses halaman lain tanpa login maka tidak akan bisa karena session login tidak ada
+
+
+kemudian di halaman lain kita bisa mengecek apakah session login ada atau tidak dengan cara : 
+if (!isset($_SESSION["login"])) {
+    header("Location:login.php");
+    exit;
+}
+
+
+artinya jika session login tidak ada maka akan diarahkan ke halaman login.php dan exit untuk menghentikan proses selanjutnya

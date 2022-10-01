@@ -1,0 +1,39 @@
+///
+pertama buat terlebeih dahulu form login 
+selanjutnya membuat logic login
+
+cek apakah user sudah menginputkan username dan password dan sudah menekan tombol login atau belum
+jika tombol submit sudah di tekan
+maka 
+kita tampung $_Post yang di inputkan oleh user ke variabel username dan password
+contoh
+
+if(isset($_POST["login"])){
+    global $conn;
+    $username =$_POST["username"];
+    $password =$_POST["password"];
+
+
+lalu kita buat mysqli_query untuk mengecek apakah username yang di inputkan ada di database atau tidak
+
+$result=mysqli_query($conn,"SELECT * FROM user WHERE username='$username'");
+
+
+lalu dicek lagi apakah ada database yang dicari menggunakan mysqli_query (Usernamenya ada atau tidak di database)
+
+dicek menggunakan mysqli_num_rows($result) ==> ini untuk mengecek apakah ada data yang di temukan atau tidak
+contoh
+
+if(mysqli_num_rows($result)===1){
+    //jika ada
+    maka kita ambil datanya menggunakan mysqli_affected_rows($result)
+    $row=mysqli_fetch_assoc($result);
+
+setelah diambil datanya kita cek apakah password yang di inputkan oleh user sama dengan password yang ada di database
+ dicek menggunakan password_veify($password,$row["password"])
+contoh
+
+if(password_veify($password,$row["password"])){
+    jika benar maka akan diarahkan langsung ke index.php menggunakan
+    header("Location:index.php")
+}

@@ -1,0 +1,20 @@
+//langkah langkah update di php
+
+konsep update hampir sama dengan insert, hanya saja kita harus menambahkan kondisi where untuk menentukan data mana yang akan diupdate.
+
+alur kerja update 
+1.membuat function dengan nama delete dengan parameter $data ==> data ini nnati di isi dengan array yang berisi data yang akan diupdate dengan method post
+2.membuat variable $id yang berisi data id yang akan diupdate
+3.membuat variable $nama yang berisi data nama yang akan diupdate
+4.membuat variable $alamat yang berisi data alamat yang akan diupdate
+5.membuat variable $no_hp yang berisi data no_hp yang akan diupdate
+6.membuat variable $email yang berisi data email yang akan diupdate
+7.membuat variable $query yang berisi query update
+8.membuat variable $result yang berisi eksekusi query
+9.membuat return mysqli affected_rows($result) untuk mengecek apakah data berhasil diupdate atau tidak
+
+lalu setelah membuat function kita kembali ke halaman edit,karena nantinya kita akan mengirimkan data ke function update yang sudah kita buat tadi
+
+//langkah langkah edit => update di php
+1.membuat pengkonidisan apabila tombol submit di klik maka akan menjalankan function update
+2.membuat pengkonidisan apabila function update mengembalikan nilai 1 maka akan menampilkan alert data berhasil diupdate dan akan diarahkan ke halaman index

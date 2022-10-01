@@ -1,0 +1,54 @@
+//langkah langkah untuk membuat Edit 
+1. pada index.php tambahkan link pada bagian btn Edit
+2. link tersebut diarahkan dengan mengirimkan nim menggunakan mehthod get yang akan di edit
+contohnya 
+ <a href="edit.php?nim=<?= $mhs["nim"]; ?>" class="badge bg-success text-decoration-none">Edit</a>
+
+logikanya adalah pada saaat kita mengklik tombol edit,maka kita akan mengirimkan data berupa nim => nim yang akan di edit
+
+nim tersebut berasal dari data yang kita ambil dari database
+diatas index ada foreach yang berfungsi untuk mengambil data dari database
+kemudian di edit kita tambahkan link untuk mengirimkan nim yang akan di edit
+
+3. pada edit.php kita ambil data yang akan di edit
+kita menangkap data yang dikirimkan dari index menggunakan method get
+contohnya
+$nim = $_GET['nim']; => ini artinya kita menangkap data nim yang dikirimkan dari index.php
+
+4. langkah selanjnutnya kita buat function query untuk mengambil data yang akan di edit
+ function tesebut ditaruh di file functions.php
+ kita buat function edit menggunakan parameter $data yang berisi data nim yang akan di edit
+ contohnya
+ function edit($data){
+    global $conn;
+    $results = mysqli_query($conn,"SELECT * FROM mahasiswa WHERE nim= $data"); ==> ini artinya kita mengambil data mahasiswa yang nim nya sama dengan nim yang dikirimkan dari index.php maka nnanti akan mucul semua data data yang ber nim tersebut
+
+    return mysqli_fetch_assoc($results); ==> artinya kita mengembalikan data yang sudah di ambil dari database dan kita ubah menjadi array assosiatif agar lebih mudah di gunakan
+
+
+ }
+
+
+
+ seletah membuat function kita balik ke edit.php
+    kita panggil function edit yang sudah kita buat tadi
+    contohnya
+    $mhs = edit($nim); ==> ini artinya kita memanggil function edit yang sudah kita buat tadi dan mengirimkan data nim yang akan di edit
+
+    contoh potongan program diatas adalah untuk mengambil data yang akan di edit
+    return dari function edit adalah array assosiatif yang berisi data yang akan di edit
+    data data berupa id, nim, nama, ttl, jk, agama, alamat, tlp
+
+    jadi artinya $mhs adalah array assosiatif yang berisi data data yang akan di edit
+    kemudian kita tambahkan value pada form yang akan di edit
+
+    mengguanakan $mhs['nama'] artinya kita mengambil data nama dari array assosiatif $mhs
+    contohnya
+    <input type="text" name="nama" id="nama" value="<?= $mhs['nama']; ?>" required>
+    artinya kita mengambil data nama dari array assosiatif $mhs dan kita tambahkan value pada form nama
+
+
+
+
+
+
